@@ -1,0 +1,76 @@
+body{
+	background: #F5F8FA;
+}
+
+#container-control{
+	width: 1000px;
+	margin: 0 auto;
+}
+#content{
+	background: #FFFFFF;
+	width: 95%;
+	margin: 80px auto 0;
+}
+
+#content-monitor{
+	background: #FFFFFF;
+	width: 97%;
+	margin: 5px auto 0;
+}
+
+
+.monitoring{
+	width:100%;
+	position:relative;
+	width: 95%;
+	margin: 60px auto 0;	
+}
+
+.button-modal{
+	position:absolute;
+	top:8px;
+	left:20px;
+}
+
+#content-monitor .panel-body{
+	background: rgba(0,0,0,0.5);
+	color: white;
+	text-shadow: 1px 1px 1px black;
+	box-shadow: 0px -1px 1px rgba(0,0,0,0.8);
+}
+
+.modal-dialog{
+	width: 95%;
+}
+
+#content table{
+	font-size:13px;
+}
+
+#content-login{
+	width: 500px;
+	margin: 120px auto 0;
+}
+
+#content-input{
+	width: 80%;
+	margin: 80px auto 0;
+}
+
+.title a{
+	background: rgba(0,0,0,0.05);
+}
+
+table{
+	width:100%;
+}
+
+#footer{
+	position:relative;
+	
+}
+.about{
+	position:absolute;
+	right: 10px;
+	bottom: -30px;
+}

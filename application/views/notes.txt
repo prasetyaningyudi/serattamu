@@ -1,0 +1,13 @@
+Ruang Rapat
+Rapat
+Pegawai
+Barang
+Instansi
+Tujuan
+login
+no-permission
+User
+About
+Tamu
+
+Monitoring
