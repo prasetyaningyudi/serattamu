@@ -1,76 +1,180 @@
 body{
-	background: #F5F8FA;
+	background: #EDEDED;
+	margin:0;
+	padding: 0;
+}
+.no-margin{
+	margin:0;
+	padding:0;
+}
+a:hover{
+	text-decoration:none;
 }
 
-#container-control{
-	width: 1000px;
-	margin: 0 auto;
-}
-#content{
-	background: #FFFFFF;
-	width: 95%;
-	margin: 80px auto 0;
+.my-navbar{
+	margin: 0;
+	border-radius: 0;
+	border: none;
+	z-index: 999;
 }
 
-#content-monitor{
-	background: #FFFFFF;
-	width: 97%;
-	margin: 5px auto 0;
+.my-navbar button{
+	border-radius: 0px;
+	margin-right: 0;
 }
 
-
-.monitoring{
-	width:100%;
+.my-title{
+	border-right: solid 1px #9D9D9D;
+	width: 250px;
+}
+.my-title span{
+	margin-right: 5px;
+}
+.my-breadcurm{
+	height: 40px;
+	background: #3A3633;	
+	width: 100%;
+	border-bottom: solid 1px #1A1A1A;
+	padding: 8px 17px;
+	color:#C0BBB7;
+}
+.my-profile{
+	height: 40px;
+	width: 100%;
+	border-bottom: solid 1px #1A1A1A;
+	padding: 8px 12px;
+	color:#C0BBB7;
+}
+.my-profile img{
+	margin-right: 5px;
+}
+.my-menu{
+	border-top: solid 1px #4A4A4A;
+	padding: 0px;
+}
+.my-menu .panel{
+	background: none;
+	border-radius: 0;
+}
+#container{
 	position:relative;
-	width: 95%;
-	margin: 60px auto 0;	
+	overflow-x: hidden; 	
+}
+#sidebar ul{
+	padding:0;
+	margin:0;
 }
 
-.button-modal{
-	position:absolute;
-	top:8px;
-	left:20px;
+#sidebar ul ul{
+	padding: 0px 0px 0px 15px;
+	margin: 0px;
+	background: #403F3D;
+}
+#sidebar ul li{
+	padding: 7px 0;
+}
+#sidebar ul li:hover{
+	color:white;
+	display:block;
+}
+#sidebar ul li a{
+	padding-left: 15px;
+	display:block;
+}
+#sidebar ul li li a{
+	padding-left: 0px;
+	display:block;
+}
+#sidebar ul li li a:hover{
+	background: #4D4F4F;
 }
 
-#content-monitor .panel-body{
-	background: rgba(0,0,0,0.5);
+#sidebar li li{
+	border-left: solid 1px #C0BBB7;
+	padding: 2px 0;
+	margin-left:15px;
+}
+#sidebar a{
+	color: #C0BBB7;
+	text-decoration:none;
+}
+#sidebar a:hover{
 	color: white;
-	text-shadow: 1px 1px 1px black;
-	box-shadow: 0px -1px 1px rgba(0,0,0,0.8);
+	text-decoration:none;
 }
-
-.modal-dialog{
-	width: 95%;
+#sidebar a:active{
+	text-decoration:none;
 }
-
-#content table{
-	font-size:13px;
+#sidebar a span{
+	margin-right: 12px;
 }
-
-#content-login{
-	width: 500px;
-	margin: 120px auto 0;
+#sidebar-up{
+	width: 250px;
+	height: 100%;
+	min-height: 750px;
 }
-
-#content-input{
-	width: 80%;
-	margin: 80px auto 0;
-}
-
-.title a{
-	background: rgba(0,0,0,0.05);
-}
-
-table{
-	width:100%;
-}
-
-#footer{
-	position:relative;
-	
-}
-.about{
+#container #sidebar{
 	position:absolute;
-	right: 10px;
-	bottom: -30px;
+	background: #3A3633;
+	height: 100%;
+	min-height: 750px;	
+	color: #C0BBB7;
+	width: 250px;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;	
+	box-shadow: inset -5px 0px 5px rgba(0,0,0,0.3);	
+	overflow:hidden;	
+	z-index:1000;
 }
+#container #content{
+	position:relative;
+	background: #EDEDED;
+	margin-left: 250px;
+	height: 100%;
+	min-height: 750px;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;	
+}
+#container.toggled #content{
+	margin-left:45px;	
+}
+#container.toggled #sidebar{
+	width: 45px;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;		
+}
+#container.toggled #sidebar:hover{		
+	width: 250px;
+}
+
+.my-content{
+	padding: 20px 13px;
+}
+
+.my-content .panel{
+	border-radius: 0px;
+}
+.my-content .panel-heading{
+	border-radius: 0px;
+}
+
+.panel-brown > .panel-heading {
+  background-image: -webkit-linear-gradient(top, #4a4a4a 0%, #3a3a3a 100%);
+  background-image:      -o-linear-gradient(top, #4a4a4a 0%, #3a3a3a 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#4a4a4a), to(#3a3a3a));
+  background-image:         linear-gradient(to bottom, #4a4a4a 0%, #3a3a3a 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff337ab7', endColorstr='#ff2e6da4', GradientType=0);
+  background-repeat: repeat-x;
+  color: #EEEEEE;
+}
+
+.panel-brown{
+	border:solid 1px #4a4a4a;
+}
+
