@@ -23,6 +23,7 @@ class Authentication extends CI_Controller {
 			$this->data['data_table'] = 'no';		
 			$this->data['warning'] = null;
 			$this->data['subtitle'] = 'Login';		
+			$this->data['role_access'] = array('4');		
 			
 			//view
 			$this->load->view('section_header', $this->data);
@@ -64,17 +65,14 @@ class Authentication extends CI_Controller {
 			$this->session->sess_expiration = '2';
 			$this->session->sess_expire_on_close = 'true';
 			$this->session->set_userdata($data_session);
-			if($this->session->userdata['ROLE_ID'] ==  '2'){
-				redirect('home/');
-			}else{
-				redirect('home/');
-			}
+			redirect('home/');
 		}else{
 			$this->data['warning'] = array(
 				'text' => 'Username atau Password Salah',
 			);
 			$this->data['data_table'] = 'no';		
-			$this->data['subtitle'] = 'Login';		
+			$this->data['subtitle'] = 'Login';	
+			$this->data['role_access'] = array('4');
 			
 			//view
 			$this->load->view('section_header', $this->data);
@@ -102,7 +100,8 @@ class Authentication extends CI_Controller {
 	
 	public function no_permission(){		
 		$this->data['data_table'] = 'no';		
-		$this->data['subtitle'] = 'No Permission';		
+		$this->data['subtitle'] = 'No Permission';	
+		$this->data['role_access'] = array('1','2','3','4');		
 		
 		//view
 		$this->load->view('section_header', $this->data);

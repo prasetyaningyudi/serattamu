@@ -24,8 +24,7 @@ a:hover{
 }
 
 .my-title{
-	border-right: solid 1px #9D9D9D;
-	width: 250px;
+	width: 750px;
 }
 .my-title span{
 	margin-right: 5px;
@@ -37,6 +36,12 @@ a:hover{
 	border-bottom: solid 1px #1A1A1A;
 	padding: 8px 17px;
 	color:#C0BBB7;
+}
+.my-breadcurm a{
+	color:#EEEEEE;
+}
+.my-breadcurm a:hover{
+	color:#FFFFFF;
 }
 .my-profile{
 	height: 40px;
@@ -68,7 +73,7 @@ a:hover{
 #sidebar ul ul{
 	padding: 0px 0px 0px 15px;
 	margin: 0px;
-	background: #403F3D;
+
 }
 #sidebar ul li{
 	padding: 7px 0;
@@ -86,7 +91,7 @@ a:hover{
 	display:block;
 }
 #sidebar ul li li a:hover{
-	background: #4D4F4F;
+	background: rgba(0,0,0,0.1);;
 }
 
 #sidebar li li{
@@ -133,7 +138,7 @@ a:hover{
 	background: #EDEDED;
 	margin-left: 250px;
 	height: 100%;
-	min-height: 750px;
+	min-height: 1000px;
 	-webkit-transition: all 0.5s ease;
 	-moz-transition: all 0.5s ease;
 	-o-transition: all 0.5s ease;

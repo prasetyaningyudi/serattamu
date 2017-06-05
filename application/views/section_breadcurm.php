@@ -15,7 +15,7 @@
 			</div>
 			<div class="col-xs-6 text-right no-margin">
 				<?php if(isset($this->session->userdata['is_logged_in'])): ?>
-					<a href="<?php echo base_url().'authentication/logout'; ?>" title="">Logout</a>
+					Login as : <?php echo $this->session->userdata('ROLE_NAME'); ?> | <a href="<?php echo base_url().'authentication/logout'; ?>" title="">Logout</a>
 				<?php else: ?>
 					<?php if($subtitle != 'Login'): ?>
 						<a href="<?php echo base_url().'authentication/login'; ?>" title="">Login</a>
