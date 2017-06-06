@@ -43,10 +43,10 @@
 	background: rgba(0,0,0,0.1);
 }
 .panel-brown > .panel-heading {
-  background-image: -webkit-linear-gradient(top, #DDDDDD 0%, #EFEFEF 100%);
-  background-image:      -o-linear-gradient(top, #DDDDDD 0%, #EFEFEF 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#DDDDDD), to(#EFEFEF));
-  background-image:         linear-gradient(to bottom, #DDDDDD 0%, #EFEFEF 100%);
+  background-image: -webkit-linear-gradient(top, #F3F3F3 0%, #EBEBEB 100%);
+  background-image:      -o-linear-gradient(top, #F3F3F3 0%, #EBEBEB 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#F3F3F3), to(#EBEBEB));
+  background-image:         linear-gradient(to bottom, #F3F3F3 0%, #EBEBEB 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff337ab7', endColorstr='#ff2e6da4', GradientType=0);
   background-repeat: repeat-x;
   color: #343434;

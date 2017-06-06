@@ -49,7 +49,7 @@ $(document).ready(function() {
 							</a>
 						</td>
 						<td class="text-center">
-							<a class="btn-sm btn-primary" role="button" title="update" href="<?php echo base_url().'employee/update/'.$item->ID;?>">
+							<a class="btn-sm btn-primary" role="button" title="update" href="<?php echo base_url().'employee/delete/'.$item->ID;?>">
 								trash
 							</a>
 						</td>						
