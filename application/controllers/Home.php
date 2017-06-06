@@ -11,16 +11,40 @@ class Home extends CI_Controller {
 		$this->load->helper('cookie');
 		$this->load->database();
 		$this->load->model('menu_model'); //can replace with cookies or session
-		$this->load->model('init_model'); //can replace with cookies or session
 		$this->data['menu'] = $this->menu_model->get_menu();
-		$this->data['sub_menu'] = $this->menu_model->get_sub_menu();		
+		$this->data['sub_menu'] = $this->menu_model->get_sub_menu();	
+		$this->load->model('init_model'); //can replace with cookies or session		
 		$this->data['title'] = 'Home';		
 	}
 	
 	public function index(){	
-		$this->data['subtitle'] = 'Welcome';			
+		$this->data['subtitle'] = 'Index';			
 		$this->data['data_table'] = 'no';
 		$this->data['role_access'] = array('1','2','3','4');		
+		
+		if($this->init_data_validation()){
+			$this->data['valid'] = TRUE;
+			$this->set_cookies_init();
+		}else{
+			$this->data['valid'] = FALSE;
+			$this->set_cookies_init_none();
+		}		
+		
+		//view
+		$this->load->view('section_header', $this->data);
+		$this->load->view('section_navbar');
+		$this->load->view('section_sidebar');
+		$this->load->view('section_breadcurm');
+		$this->load->view('section_content_title');
+		$this->load->view('home');
+		$this->load->view('section_footer');
+		redirect('home/welcome');
+	}	
+	
+	public function welcome(){	
+		$this->data['subtitle'] = 'Welcome';			
+		$this->data['data_table'] = 'no';
+		$this->data['role_access'] = array('1','2','3','4');	
 		
 		if($this->init_data_validation()){
 			$this->data['valid'] = TRUE;
@@ -136,44 +160,60 @@ class Home extends CI_Controller {
 			$icon = $item->ICON;
 			$theme = $item->THEME;			
 		}
-		
-		//if(get_cookie("app_name") === null){
-			//set cookies
-			$cookie= array(
-			  'name'   => 'app_name',
-			  'value'  => $app_name,
-			   'expire' => '86500',
-			);
-			$this->input->set_cookie($cookie);				
-		//}
-		//if(get_cookie("office_name") === null){
-			//set cookies
-			$cookie= array(
-			  'name'   => 'office_name',
-			  'value'  => $office_name,
-			   'expire' => '86500',
-			);
-			$this->input->set_cookie($cookie);				
-		//}
-		//if(get_cookie("icon") === null){
-			//set cookies
-			$cookie= array(
-			  'name'   => 'icon',
-			  'value'  => $icon,
-			   'expire' => '86500',
-			);
-			$this->input->set_cookie($cookie);				
-		//}
-		//if(get_cookie("theme") === null){
-			//set cookies
-			$cookie= array(
-			  'name'   => 'theme',
-			  'value'  => $theme,
-			   'expire' => '86500',
-			);
-			$this->input->set_cookie($cookie);				
-		//}		
+
+		$cookie= array(
+		  'name'   => 'app_name',
+		  'value'  => $app_name,
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
+		$cookie= array(
+		  'name'   => 'office_name',
+		  'value'  => $office_name,
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
+		$cookie= array(
+		  'name'   => 'icon',
+		  'value'  => $icon,
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
+		$cookie= array(
+		  'name'   => 'theme',
+		  'value'  => $theme,
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
 	}
+	
+	
+	private function set_cookies_init_none(){
+		$cookie= array(
+		  'name'   => 'app_name',
+		  'value'  => 'Guest Book',
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
+		$cookie= array(
+		  'name'   => 'office_name',
+		  'value'  => 'Company Name',
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
+		$cookie= array(
+		  'name'   => 'icon',
+		  'value'  => 'book',
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
+		$cookie= array(
+		  'name'   => 'theme',
+		  'value'  => 'dark',
+		   'expire' => '86500',
+		);
+		$this->input->set_cookie($cookie);				
+	}	
 }
 
 

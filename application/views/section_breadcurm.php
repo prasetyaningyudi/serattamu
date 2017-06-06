@@ -18,7 +18,7 @@
 					Login as : <?php echo $this->session->userdata('ROLE_NAME'); ?> | <a href="<?php echo base_url().'authentication/logout'; ?>" title="">Logout</a>
 				<?php else: ?>
 					<?php if($subtitle != 'Login'): ?>
-						<a href="<?php echo base_url().'authentication/login'; ?>" title="">Login</a>
+						<b><a href="<?php echo base_url().'authentication/login'; ?>" title="">Login</a></b>
 					<?php endif; ?>	
 				<?php endif; ?>	
 			</div>

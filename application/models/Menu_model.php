@@ -17,7 +17,8 @@ class Menu_model extends CI_Model {
 			$this->db->select('MENU_ID');
 			$this->db->from('MENU');
 			$this->db->where('MENU_STATUS=1');		
-			$this->db->where('MENU_ID', NULL);	
+			$this->db->where('MENU_ID', NULL);
+			$this->db->like('ROLE_ACCESS', $this->cek_role(), 'both'); 			
 			$this->db->order_by('MENU_ORDER');			
 			$query = $this->db->get(); 
 			return $query->result();
@@ -32,10 +33,20 @@ class Menu_model extends CI_Model {
 			$this->db->select('MENU_ID');
 			$this->db->from('MENU');
 			$this->db->where('MENU_STATUS=1');		
-			$this->db->where('MENU_ID IS NOT NULL');		
+			$this->db->where('MENU_ID IS NOT NULL');
+			$this->db->like('ROLE_ACCESS', $this->cek_role(), 'both'); 			
 			$this->db->order_by('MENU_ID');		
 			$this->db->order_by('MENU_ORDER');		
 			$query = $this->db->get(); 
 			return $query->result();
         }		
+		
+		private function cek_role(){
+			$this->load->library('session');
+			if(isset($this->session->userdata['is_logged_in'])) {
+				return $this->session->userdata['ROLE_ID'];
+			}else{
+				return '4';
+			}			
+		}
 }

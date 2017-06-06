@@ -9,6 +9,9 @@ class Authentication extends CI_Controller {
 		$this->load->library('session');		
 		$this->load->helper('url');			
 		$this->load->database();
+		$this->load->model('menu_model'); //can replace with cookies or session
+		$this->data['menu'] = $this->menu_model->get_menu();
+		$this->data['sub_menu'] = $this->menu_model->get_sub_menu();		
 		$this->data['title'] = 'Authentication';		
 	}
 
@@ -68,7 +71,7 @@ class Authentication extends CI_Controller {
 			redirect('home/');
 		}else{
 			$this->data['warning'] = array(
-				'text' => 'Username atau Password Salah',
+				'text' => 'Ops, Something wrong with username or password',
 			);
 			$this->data['data_table'] = 'no';		
 			$this->data['subtitle'] = 'Login';	

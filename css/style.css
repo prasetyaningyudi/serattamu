@@ -17,7 +17,10 @@ a:hover{
 	border: none;
 	z-index: 999;
 }
-
+/* Title */
+.navbar-default .navbar-brand {
+    color: #2D2A28;
+}
 .my-navbar button{
 	border-radius: 0px;
 	margin-right: 0;
@@ -182,4 +185,3 @@ a:hover{
 .panel-brown{
 	border:solid 1px #4a4a4a;
 }
-
