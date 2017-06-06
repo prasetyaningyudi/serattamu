@@ -34,7 +34,7 @@ class User extends CI_Controller {
 		
 		$this->data['subtitle'] = 'View';			
 		$this->data['data_table'] = 'yes';
-		$this->data['role_access'] = array('1','2','3','4');			
+		$this->data['role_access'] = array('1');			
 		
 		//view
 		$this->load->view('section_header', $this->data);
@@ -84,7 +84,7 @@ class User extends CI_Controller {
 		
 		$this->data['subtitle'] = 'Add';			
 		$this->data['data_table'] = 'no';	
-		$this->data['role_access'] = array('1','2','3','4');			
+		$this->data['role_access'] = array('1');			
 		
 		//view
 		$this->load->view('section_header', $this->data);
@@ -152,7 +152,7 @@ class User extends CI_Controller {
 				
 				$this->data['subtitle'] = 'Update';			
 				$this->data['data_table'] = 'no';	
-				$this->data['role_access'] = array('1','2','3','4');			
+				$this->data['role_access'] = array('1');			
 				
 				//view
 				$this->load->view('section_header', $this->data);

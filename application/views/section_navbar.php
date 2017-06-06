@@ -28,7 +28,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				 </button>		
-				<a class="navbar-brand my-title" href="<?php base_url(); ?>">
+				<a class="navbar-brand my-title" href="<?php echo base_url(); ?>">
 					<span class="glyphicon glyphicon-<?php echo $icon; ?>"></span> 
 					<b>
 						<?php
