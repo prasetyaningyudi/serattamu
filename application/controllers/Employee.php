@@ -137,7 +137,7 @@ class Employee extends CI_Controller {
 				$this->load->view('employee_update');
 				$this->load->view('section_footer');
 			}else{
-				redirect('meeting_room');
+				redirect('employee');
 			}						
 		}
 	}

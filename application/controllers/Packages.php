@@ -10,176 +10,217 @@ class Packages extends CI_Controller {
 		$this->load->helper('url');		
 		$this->load->database();
 		$this->load->model('menu_model'); //can replace with cookies or session
-		ini_set('date.timezone', 'Asia/Jakarta');
-		$this->data['title'] = 'Barang';		
+		$this->data['menu'] = $this->menu_model->get_menu();
+		$this->data['sub_menu'] = $this->menu_model->get_sub_menu();
+		$this->data['title'] = 'Package';		
 	}
 
-	public function index(){
-		//load list pegawai
-		$tables = array('BARANG', 'PEGAWAI', 'INSTANSI', 'USER');
-		$this->db->select('BARANG.ID');
-		$this->db->select('BARANG.NAMA_BARANG');
-		$this->db->select('BARANG.PEGAWAI_ID');
-		$this->db->select('BARANG.INSTANSI_ID');
-		$this->db->select('BARANG.USER_ID');
-		$this->db->select('BARANG.STATUS_BARANG');
-		$this->db->select('BARANG.WAKTU_TERIMA');
-		$this->db->select('PEGAWAI.NAMA_PEGAWAI');
-		$this->db->select('INSTANSI.NAMA_INSTANSI');
-		$this->db->from($tables);
-		$this->db->where('BARANG.PEGAWAI_ID = PEGAWAI.ID');
-		$this->db->where('BARANG.INSTANSI_ID = INSTANSI.ID');
-		$this->db->where('BARANG.USER_ID = USER.ID');
-		$this->db->limit(100);
-		$this->db->order_by('BARANG.WAKTU_TERIMA', 'DESC');	
+	public function index($id=null){
+		$tables = array('PACKAGES', 'COMPANY', 'EMPLOYEES');		
+		$this->db->select('PACKAGES.ID');
+		$this->db->select('PACKAGES.PACKAGE_NAME');
+		$this->db->select('COMPANY.COMPANY_NAME');
+		$this->db->select('EMPLOYEES.EMPLOYEE_NAME');
+		$this->db->select('PACKAGES.PACKAGE_STATUS');
+		$this->db->select('PACKAGES.CREATE_DATE');
+		$this->db->from($tables);	
+		$this->db->where('PACKAGES.PACKAGE_STATUS !=', '9');			
+		$this->db->where('PACKAGES.COMPANY_ID=COMPANY.ID');
+		$this->db->where('PACKAGES.EMPLOYEES_ID=EMPLOYEES.ID');
+		if($id !== null){
+		$this->db->where('PACKAGES.ID', $id);			
+		}
+		$this->db->order_by('PACKAGES.CREATE_DATE', 'ASC');			
 		$query = $this->db->get(); 
-		$data['record'] = $query->result();		
+		$this->data['record'] = $query->result();	
 		
-		//Passing data
-		$data['menu'] = $this->menu_model->get_menu();
-		$data['sub_menu'] = $this->menu_model->get_sub_menu();	
-		$data['role_access'] = array('1','2','3');
-		$data['data_table'] = "yes";
-		$data['about'] = "yes";
+		$this->data['subtitle'] = 'View';			
+		$this->data['data_table'] = 'yes';
+		$this->data['role_access'] = array('1','3','4');			
 		
-		//Load View
-		$this->load->view('section_header', $data);
+		//view
+		$this->load->view('section_header', $this->data);
 		$this->load->view('section_navbar');
-		$this->load->view('section_sidebar', $data);
+		$this->load->view('section_sidebar');
 		$this->load->view('section_breadcurm');
+		$this->load->view('section_content_title');
 		$this->load->view('packages_index');
 		$this->load->view('section_footer');
 	}
 	
 	public function create(){
-		if(isset($_POST['submit'])){			
-			//insert ke database
-			$data['saveddata'] = array(
-				'NOMOR_SURAT' => $_POST['nomor'],
-				'TGL_SURAT' => $_POST['tgl'],
-				'HAL_SURAT' => $_POST['hal'],
-				'INSTANSI_ID' => $_POST['instansi'],
-				'STATUS_SURAT_ID' => '1',
-			);			
-			$this->db->insert('SURAT', $data['saveddata']);
-			$last_insert_id = $this->db->insert_id();
-			
-			$data1['saveddata'] = array(
-				'SURAT_ID' => $last_insert_id,
-				'STATUS_SURAT_ID' => '1',
-				'USER_ID' => '1', //ingat di edit
-			);	
-			$this->db->insert('LOG_SURAT', $data1['saveddata']);
-			header("location: " . base_url()."Surat_controller/");	
-		}else{
-			//load company list
+		if(isset($_POST['submit'])){
 			$this->db->select('ID');
-			$this->db->select('COMPANY_NAME');
-			$this->db->from('COMPANY');
-			$this->db->where('COMPANY_STATUS=1');
-			$this->db->order_by('COMPANY_NAME', 'ASC');		
+			$this->db->select('EMPLOYEE_NAME');
+			$this->db->from('EMPLOYEES');		
+			$this->db->where('EMPLOYEE_STATUS', '1');		
+			$this->db->where('EMPLOYEE_NAME', $_POST['for']);	
+			$this->db->limit(1);			
 			$query = $this->db->get(); 
-			$data['record'] = $query->result();	
-			
-			$this->data['menu'] = $this->menu_model->get_menu();
-			$this->data['sub_menu'] = $this->menu_model->get_sub_menu();
-			$this->data['subtitle'] = 'Rekam';			
-			$this->data['data_table'] = 'no';		
-			
-			//view
-			$this->load->view('section_header', $this->data);
-			$this->load->view('section_navbar');
-			$this->load->view('section_sidebar');
-			$this->load->view('section_breadcurm');
-			$this->load->view('packages_create');
-			$this->load->view('section_footer');
-		}	
-	}
-
-	public function ubah($id=null){
-		if($id == null){
-			header("location: " . base_url()."User_authentication/no_permission");
-		}else{
-			//load instansi list
-			$this->db->select('ID');
-			$this->db->select('NAMA_INSTANSI');
-			$this->db->from('INSTANSI');
-			$this->db->order_by('NAMA_INSTANSI', 'ASC');		
-			$query = $this->db->get(); 
-			$data['record1'] = $query->result();
-			
-			//load tujuan list
-			$this->db->select('ID');
-			$this->db->select('NAMA_PEGAWAI');
-			$this->db->from('PEGAWAI');
-			$this->db->order_by('NAMA_PEGAWAI', 'ASC');		
-			$this->db->where('STATUS_PEGAWAI', '1');		
-			$query = $this->db->get(); 
-			$data['record2'] = $query->result();	
-		
-			//load barang by id
-			$this->db->select('ID');	
-			$this->db->select('NAMA_BARANG');	
-			$this->db->select('INSTANSI_ID');	
-			$this->db->select('PEGAWAI_ID');	
-			$this->db->select('STATUS_BARANG');	
-			$this->db->select('WAKTU_TERIMA');	
-			$this->db->select('USER_ID');	
-			$this->db->from('BARANG');
-			$this->db->where('ID', $id);	
-			$query = $this->db->get();	
-			$data['record3'] = $query->result();
-			
-
-			if($data['record3'] != null){
-				//Passing data
-				$data['role_access'] = array('1', '3');
-				$data['data_table'] = "no";
-				$data['about'] = "no";			
-				
-				//Load View
-				$this->load->view('seg_head_view', $data);
-				$this->load->view('seg_navigation_view', $data);
-				$this->load->view('barang_ubah_view', $data);
-				$this->load->view('seg_footer_view', $data);
-				
-				if(isset($_POST['submit'])){
-					//insert ke database
-					$data['saveddata'] = array(
-						'NAMA_BARANG' => $_POST['nama'],
-						'PEGAWAI_ID' => $_POST['pegawai'],
-						'USER_ID' => $_POST['user'],
-						'INSTANSI_ID' => $_POST['instansi'],
-						'WAKTU_TERIMA' => $_POST['waktu'],
-						'STATUS_BARANG' => $_POST['status'],
-					);	
-					$this->db->where('ID', $_POST['id']);
-					$this->db->update('BARANG', $data['saveddata']);	
-					header("location: " . base_url()."Barang_controller/");
-				}else{
-					//Do nothing
-				}
+			$this->data['record2'] = $query->result();	
+			if($query->num_rows()!=1){
+				$this->data['warning'] = array(
+					'text' => 'Ops, Destination package for not valid, Try a new one.',
+				);
 			}else{
-				header("location: " . base_url()."Barang_controller/");
-			}			
+				foreach($this->data['record2'] as $item){
+					$employee_id = $item->ID;
+				}				
+				//insert ke database
+				$this->data['saveddata'] = array(
+					'PACKAGE_NAME' => 'Package from '.substr($_POST['from'],1).' to '.$_POST['for'],
+					'EMPLOYEES_ID' => $employee_id,
+					'COMPANY_ID' => substr($_POST['from'],0,1),
+					'USER_ID' => $_POST['user']
+				);			
+				$this->db->insert('PACKAGES', $this->data['saveddata']);
+				redirect('packages/index/'.$this->db->insert_id());					
+			}						
 		}
+		//load data
+		$tables = array('COMPANY', 'REF_GENERAL');		
+		$this->db->select('COMPANY.ID');
+		$this->db->select('COMPANY.COMPANY_NAME');
+		$this->db->select('REF_GENERAL.REF_NAME');
+		$this->db->from($tables);	
+		$this->db->where('COMPANY.COMPANY_STATUS', '1');		
+		$this->db->where('REF_GENERAL.REF_STATUS', '1');		
+		$this->db->where('COMPANY.REF_GENERAL_ID=REF_GENERAL.ID');
+		$this->db->where('REF_GENERAL.REF_NAME', 'Expedition');
+		$this->db->order_by('COMPANY.COMPANY_NAME', 'ASC');			
+		$query = $this->db->get(); 
+		$this->data['record'] = $query->result();		
+		
+		$this->db->select('ID');
+		$this->db->select('EMPLOYEE_NAME');
+		$this->db->from('EMPLOYEES');
+		$this->db->order_by('EMPLOYEE_NAME', 'ASC');		
+		$this->db->where('EMPLOYEE_STATUS', '1');		
+		$query = $this->db->get(); 
+		$this->data['record1'] = $query->result();		
+		
+		$this->data['subtitle'] = 'Add';			
+		$this->data['data_table'] = 'no';	
+		$this->data['role_access'] = array('1','3','4');			
+		
+		//view
+		$this->load->view('section_header', $this->data);
+		$this->load->view('section_navbar');
+		$this->load->view('section_sidebar');
+		$this->load->view('section_breadcurm');
+		$this->load->view('section_content_title');
+		$this->load->view('packages_create');
+		$this->load->view('section_footer');
 	}
-
-	public function ubah_status($id=null){
+	
+	public function update($id=null){
 		if($id == null){
-			header("location: " . base_url()."User_authentication/no_permission");
+			redirect('authentication/no_permission');
 		}else{
-			//load barang by id
+			//load
+			$tables = array('PACKAGES', 'COMPANY', 'EMPLOYEES');		
+			$this->db->select('PACKAGES.ID');
+			$this->db->select('PACKAGES.PACKAGE_NAME');
+			$this->db->select('COMPANY.COMPANY_NAME');
+			$this->db->select('EMPLOYEES.EMPLOYEE_NAME');
+			$this->db->select('PACKAGES.PACKAGE_STATUS');
+			$this->db->select('PACKAGES.EMPLOYEES_ID');
+			$this->db->select('PACKAGES.COMPANY_ID');
+			$this->db->select('PACKAGES.CREATE_DATE');
+			$this->db->from($tables);	
+			$this->db->where('PACKAGES.PACKAGE_STATUS !=', '9');			
+			$this->db->where('PACKAGES.COMPANY_ID=COMPANY.ID');
+			$this->db->where('PACKAGES.EMPLOYEES_ID=EMPLOYEES.ID');
+			$this->db->where('PACKAGES.ID', $id);			
+			$this->db->order_by('PACKAGES.CREATE_DATE', 'ASC');			
+			$query = $this->db->get(); 
+			$this->data['record'] = $query->result();	
+			
+			if($query->result() !== null){
+				if(isset($_POST['submit'])){
+					$this->db->select('ID');
+					$this->db->select('EMPLOYEE_NAME');
+					$this->db->from('EMPLOYEES');		
+					$this->db->where('EMPLOYEE_STATUS', '1');		
+					$this->db->where('EMPLOYEE_NAME', $_POST['for']);	
+					$this->db->limit(1);			
+					$query = $this->db->get(); 
+					$this->data['record2'] = $query->result();	
+					if($query->num_rows()!=1){
+						$this->data['warning'] = array(
+							'text' => 'Ops, Destination package for not valid, Try a new one.',
+						);
+					}else{
+						foreach($this->data['record2'] as $item){
+							$employee_id = $item->ID;
+						}				
+						//insert ke database
+						$this->data['saveddata'] = array(
+							'PACKAGE_NAME' => 'Package from '.substr($_POST['from'],1).' to '.$_POST['for'],
+							'EMPLOYEES_ID' => $employee_id,
+							'COMPANY_ID' => substr($_POST['from'],0,1),
+							'USER_ID' => $_POST['user']
+						);	
+						$this->db->where('ID', $id);
+						$this->db->update('PACKAGES', $this->data['saveddata']);
+						redirect('packages');					
+					}	
+				}
+				
+				$this->db->select('ID');
+				$this->db->select('EMPLOYEE_NAME');
+				$this->db->from('EMPLOYEES');
+				$this->db->order_by('EMPLOYEE_NAME', 'ASC');		
+				$this->db->where('EMPLOYEE_STATUS', '1');		
+				$query = $this->db->get(); 
+				$this->data['record1'] = $query->result();	
+
+				$tables = array('COMPANY', 'REF_GENERAL');		
+				$this->db->select('COMPANY.ID');
+				$this->db->select('COMPANY.COMPANY_NAME');
+				$this->db->select('REF_GENERAL.REF_NAME');
+				$this->db->from($tables);	
+				$this->db->where('COMPANY.COMPANY_STATUS', '1');		
+				$this->db->where('REF_GENERAL.REF_STATUS', '1');		
+				$this->db->where('COMPANY.REF_GENERAL_ID=REF_GENERAL.ID');
+				$this->db->where('REF_GENERAL.REF_NAME', 'Expedition');
+				$this->db->order_by('COMPANY.COMPANY_NAME', 'ASC');			
+				$query = $this->db->get(); 
+				$this->data['record3'] = $query->result();				
+				
+				$this->data['subtitle'] = 'Update';			
+				$this->data['data_table'] = 'no';	
+				$this->data['role_access'] = array('1','3');			
+				
+				//view
+				$this->load->view('section_header', $this->data);
+				$this->load->view('section_navbar');
+				$this->load->view('section_sidebar');
+				$this->load->view('section_breadcurm');
+				$this->load->view('section_content_title');
+				$this->load->view('packages_update');
+				$this->load->view('section_footer');
+			}else{
+				redirect('packages');
+			}						
+		}
+	}	
+
+	public function update_status($id=null){
+		if($id === null){
+			redirect('authentication/no_permission');
+		}else{
+			//load data
 			$this->db->select('ID');	
-			$this->db->select('STATUS_BARANG');	
-			$this->db->from('BARANG');
+			$this->db->select('PACKAGE_STATUS');	
+			$this->db->from('PACKAGES');
 			$this->db->where('ID', $id);	
 			$query = $this->db->get();	
 			$result = $query->result();
 			
-			if($result != null){
+			if($result !== null){
 				foreach($result as $item){
-					$status = $item->STATUS_BARANG;
+					$status = $item->PACKAGE_STATUS;
 				}
 				if($status == '1'){
 					$new_status = '0';
@@ -187,12 +228,36 @@ class Packages extends CI_Controller {
 					$new_status = '1';
 				}
 				//Update Status di database
-				$this->db->set('STATUS_BARANG', $new_status);
+				$this->db->set('PACKAGE_STATUS', $new_status);
 				$this->db->where('ID', $id);
-				$this->db->update('BARANG');	
-				header("location: " . base_url()."Barang_controller/");
+				$this->db->update('PACKAGES');	
+				redirect('packages');
 			}else{
-				header("location: " . base_url()."Barang_controller/");
+				redirect('packages');
+			}
+		}		
+	}	
+	
+	public function delete($id=null){
+		if($id === null){
+			redirect('authentication/no_permission');
+		}else{
+			//load data
+			$this->db->select('ID');	
+			$this->db->select('PACKAGE_STATUS');	
+			$this->db->from('PACKAGES');
+			$this->db->where('ID', $id);	
+			$query = $this->db->get();	
+			$result = $query->result();
+			
+			if($result !== null){
+				//Update Status di database
+				$this->db->set('PACKAGE_STATUS', '9');
+				$this->db->where('ID', $id);
+				$this->db->update('PACKAGES');	
+				redirect('packages');
+			}else{
+				redirect('packages');
 			}
 		}		
 	}	

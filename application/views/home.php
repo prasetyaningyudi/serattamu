@@ -6,16 +6,41 @@
 						<?php else: ?>
 							<?php if($this->session->userdata['ROLE_ID'] == '1'): ?>	
 								<h4>Ops, It looks like it's first time you login, Please input some initial data first and manage Users</h4>
-								<p><a class="btn btn-primary btn-lg" href="<?php echo base_url()."home/init_data"; ?>" role="button">Initial Data</a> AND  
-								<a class="btn btn-primary btn-lg" href="<?php echo base_url()."user"; ?>" role="button">Manage Users</a></p>
+								<div class="row">
+									<div class="col-sm-3">
+										<a class="btn btn-primary btn-lg btn-square" href="<?php echo base_url()."home/init_data"; ?>" role="button">Initial Data</a>
+									</div>
+									<div class="col-sm-3">
+										<a class="btn btn-warning btn-lg btn-square" href="<?php echo base_url()."user"; ?>" role="button">Manage Users</a>	
+									</div>
+									<div class="col-sm-3">
+										
+									</div>
+									<div class="col-sm-3">
+										
+									</div>							
+								</div>									
 							<?php else: ?>
 								<h4>How are you today? Feels good right.<br>Lets start your work with access menus on the left sidebar. </h4>
 							<?php endif; ?>										
 						<?php endif; ?>										
 				  <?php else: ?>
 					<h2>Hello, Guest</h2>
-					<h4>How are you today? Feels good right.<br>If you want to meet someone, Just click the Sign In button to start.</h4>
-					<p><a class="btn btn-primary btn-lg" href="" role="button">Sign In</a></p>					
+					<h4>How are you today? Feels good right.<br>If you want to meet someone (SIGN IN), Attending a Meeting, Delivery Package, or another needs, <br>Just click the button below to start.</h4>
+					<div class="row">
+						<div class="col-sm-3">
+							<a class="btn btn-primary btn-lg btn-square" href="" role="button">Sign In</a>	
+						</div>
+						<div class="col-sm-3">
+							<a class="btn btn-danger btn-lg btn-square" href="" role="button">Meeting</a>	
+						</div>
+						<div class="col-sm-3">
+							<a class="btn btn-info btn-lg btn-square" href="<?php echo base_url().'packages/create'; ?>" role="button">Delivery<br>Package</a>	
+						</div>
+						<div class="col-sm-3">
+							<a class="btn btn-warning btn-lg btn-square" href="" role="button">Sign Out</a>	
+						</div>							
+					</div>					
 				  <?php endif; ?>
 			  </div>			  
 			</div> 

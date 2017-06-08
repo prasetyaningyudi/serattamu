@@ -10,61 +10,60 @@ $(document).ready(function() {
 				<table id="my_table" class="table table-striped">
 					<thead>
 					<tr>
-						<th>Nomor</th>
-						<th>Tgl</th>
-						<th>Hal</th>
-						<th>AGENDA</th>
-						<th>Dari</th>
+						<th class="text-center">No</th>
+						<th>Package Name</th>
+						<th>From</th>
+						<th>For</th>
+						<th>Time Added</th>
 						<th>Status</th>
-						<th class="text-center">edit</th>
-						<th class="text-center">disposisikan</th>
-						<th class="text-center">log</th>
+						<?php if(isset($this->session->userdata['is_logged_in'])): ?>
+						<th class="text-center">Update Status</th>
+						<th class="text-center">Update</th>
+						<th class="text-center">Trash</th>
+						<?php endif; ?>
 					</tr>
 					</thead>
 					<tbody>
-					<?php foreach ($record as $item):?>
+					<?php $i=1; foreach ($record as $item):?>
 					<tr>		
-						<td><?php echo $item->NOMOR_SURAT; ?></td>
-						<td><?php echo $item->TGL_SURAT; ?></td>
-						<td><?php echo $item->HAL_SURAT; ?></td>
+						<td class="text-center"><?php echo $i++; ?></td>
+						<td><?php echo $item->PACKAGE_NAME;?></td>
+						<td><?php echo $item->COMPANY_NAME;?></td>
+						<td><?php echo $item->EMPLOYEE_NAME;?></td>
+						<td><?php echo $item->CREATE_DATE;?></td>
 						<td>
 							<?php 
-								if($item->NOMOR_AGENDA == null){
-									echo 'Belum Ada';
-								}else{
-									echo $item->NOMOR_AGENDA; 	
-								}
+								if($item->PACKAGE_STATUS == '1'){echo 'Already Taken';}else{echo 'Not Taken';}
 							?>
 						</td>
-						<td><?php echo $item->NAMA_INSTANSI; ?></td>											
-						<td><?php echo $item->NAMA_STATUS; ?></td> 
+						<?php if(isset($this->session->userdata['is_logged_in'])): ?>
 						<td class="text-center">
-							<?php if($item->STATUS_SURAT_ID == '1'): ?>						
-							<a class="btn-sm btn-primary" role="button" title="edit" href="<?php echo base_url().'Surat_controller/ubah/'.$item->ID;?>">
-								edit
-							</a>
+							<?php if($item->PACKAGE_STATUS == '0'): ?>
+								<a class="btn-sm btn-warning" role="button" title="update status" href="<?php echo base_url().'packages/update_status/'.$item->ID;?>">
+									taken
+								</a>
 							<?php else: ?>
-								
-							<?php endif; ?>							
-						</td>
-						<td class="text-center">
-							<?php if($item->STATUS_SURAT_ID == '1'): ?>
-							<a class="btn-sm btn-primary" role="button" title="edit" href="<?php echo base_url().'Disposisi_controller/rekam/'.$item->ID;?>">
-								disposisikan
-							</a>
-							<?php else: ?>
-							
+								<a class="btn-sm btn-danger" role="button" title="update status" href="<?php echo base_url().'packages/update_status/'.$item->ID;?>">
+									nottaken
+								</a>
 							<?php endif; ?>
 						</td>						
 						<td class="text-center">
-							<a class="btn-sm btn-primary" role="button" title="edit" href="<?php echo base_url().'Surat_controller/log/'.$item->ID;?>">
-								log
+							<a class="btn-sm btn-primary" role="button" title="update" href="<?php echo base_url().'packages/update/'.$item->ID;?>">
+								update
 							</a>
 						</td>
+						<td class="text-center">
+							<a class="btn-sm btn-danger" role="button" title="update" href="<?php echo base_url().'packages/delete/'.$item->ID;?>">
+								trash
+							</a>
+						</td>
+						<?php endif; ?>
+						
 					</tr>
 					<?php endforeach;?>	
 					</tbody>
-				</table>
+				</table>			
 			  </div>			  
 			</div> 
 		</div> 
