@@ -77,6 +77,7 @@ class Guest_book extends CI_Controller {
 				redirect('packages/index/'.$this->db->insert_id());					
 			}						
 		}
+		//guest list
 		$tables = array('COMPANY', 'GUEST');					
 		$this->db->select('GUEST.ID');
 		$this->db->select('GUEST.GUEST_NAME');
@@ -92,6 +93,7 @@ class Guest_book extends CI_Controller {
 		$query = $this->db->get(); 
 		$this->data['record'] = $query->result();	
 
+		//needs list
 		$tables = array('REF_GENERAL', 'REF_TYPE');					
 		$this->db->select('REF_GENERAL.ID');
 		$this->db->select('REF_NAME');
@@ -103,6 +105,7 @@ class Guest_book extends CI_Controller {
 		$query = $this->db->get(); 
 		$this->data['record1'] = $query->result();			
 		
+		//company list
 		$tables = array('COMPANY', 'REF_GENERAL');		
 		$this->db->select('COMPANY.ID');
 		$this->db->select('COMPANY.COMPANY_NAME');
@@ -116,15 +119,14 @@ class Guest_book extends CI_Controller {
 		$query = $this->db->get(); 
 		$this->data['record2'] = $query->result();			
 		
-/* 		//load data	
-		
+		//load data	
 		$this->db->select('ID');
 		$this->db->select('EMPLOYEE_NAME');
 		$this->db->from('EMPLOYEES');
 		$this->db->order_by('EMPLOYEE_NAME', 'ASC');		
 		$this->db->where('EMPLOYEE_STATUS', '1');		
 		$query = $this->db->get(); 
-		$this->data['record1'] = $query->result();	
+		$this->data['record3'] = $query->result();	
 
 		$this->db->select('ID');
 		$this->db->select('DIVISION_NAME');
@@ -132,7 +134,7 @@ class Guest_book extends CI_Controller {
 		$this->db->order_by('DIVISION_NAME', 'ASC');		
 		$this->db->where('DIVISION_STATUS', '1');		
 		$query = $this->db->get(); 
-		$this->data['record2'] = $query->result();	 */		
+		$this->data['record4'] = $query->result();			
 		
 		$this->data['subtitle'] = 'Sign In';			
 		$this->data['data_table'] = 'no';	

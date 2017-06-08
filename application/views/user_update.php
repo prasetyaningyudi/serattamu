@@ -67,6 +67,7 @@
 						?>
 						
 					</div>	
+					</div>	
 					<?php endforeach;?>
 					</fieldset>	
 					</form>				

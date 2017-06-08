@@ -107,8 +107,41 @@ $( function() {
 	});
 });
 </script>
+
+<script>
+$( function() {
+	var whomeet= [
+		<?php foreach ($record3 as $item):?>
+		{
+			value: <?php echo '"'.$item->EMPLOYEE_NAME.'",'; ?>
+			id: <?php echo '"E'.$item->ID.'",'; ?>
+		},
+		<?php endforeach;?>
+		<?php foreach ($record4 as $item):?>
+		{
+			value: <?php echo '"'.$item->DIVISION_NAME.'",'; ?>
+			id: <?php echo '"D'.$item->ID.'",'; ?>
+		},
+		<?php endforeach;?>		
+	];	
+	$( "#who" ).autocomplete({
+		source: whomeet,
+		minLength: 1,
+		select: function( event , ui){
+			if(ui.item.id != ''){
+				$("#wid").val(ui.item.id);		
+			}else{
+				$("#wid").val('');				
+			}	
+		}		
+	});
+    $("#who").keypress(function(){		
+		$("#wid").val('');
+    });		
+} );	
+</script>
 			  <div class="panel-body">
-					<form action="" id="inputform" method="post" class="form-horizontal">
+					<form action="" id="inputform" method="get" class="form-horizontal">
 					  <fieldset>
 						<div class="form-group">	
 						<label for="name" class="col-sm-2">Guest Name:<br></label>
@@ -157,9 +190,10 @@ $( function() {
 								$user_id = 0;
 							}
 						?>					
-						<input type="hidden" name="user" value="<?php echo $user_id; ?>">	
-						<input type="hidden" name="id" value="">							
-						<input type="hidden" name="cid" value="">							
+						<input type="hidden" id="user" name="user" value="<?php echo $user_id; ?>">	
+						<input type="hidden" id="wid" name="wid" value="">							
+						<input type="hidden" id="id" name="id" value="">							
+						<input type="hidden" id="cid" name="cid" value="">							
 						<div class="form-group">
 						<div class="col-sm-2">
 						<input type="submit" name="submit" value="Submit" class="btn btn-default btn-lg">
@@ -175,6 +209,7 @@ $( function() {
 						</div>	
 						<div class="col-sm-2 text-right">
 						<input type="reset" name="reset" value="Reset" class="btn btn-default btn-lg">
+						</div>							
 						</div>							
 					</fieldset>	
 					</form>				
