@@ -17,6 +17,7 @@ $(document).ready(function() {
 						<th>Room</th>
 						<th>PIC</th>
 						<?php if(isset($this->session->userdata['is_logged_in'])): ?>
+						<th class="text-center">Participant</th>
 						<th class="text-center">Update</th>
 						<th class="text-center">Trash</th>
 						<?php endif; ?>
@@ -31,7 +32,12 @@ $(document).ready(function() {
 						<td><?php echo $item->AGENDA;?></td>
 						<td><?php echo $item->ROOM_NAME;?></td>
 						<td><?php echo $item->EMPLOYEE_NAME;?></td>
-						<?php if(isset($this->session->userdata['is_logged_in'])): ?>					
+						<?php if(isset($this->session->userdata['is_logged_in'])): ?>	
+						<td class="text-center">
+							<a class="btn-sm btn-warning" role="button" title="participant" href="<?php echo base_url().'meeting/participant/'.$item->ID;?>">
+								participant
+							</a>
+						</td>						
 						<td class="text-center">
 							<a class="btn-sm btn-primary" role="button" title="update" href="<?php echo base_url().'meeting/update/'.$item->ID;?>">
 								update
