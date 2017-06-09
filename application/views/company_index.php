@@ -15,6 +15,7 @@ $(document).ready(function() {
 						<th>Status</th>
 						<th class="text-center">Update Status</th>
 						<th class="text-center">Update</th>
+						<th class="text-center">Trash</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -43,7 +44,11 @@ $(document).ready(function() {
 								update
 							</a>
 						</td>
-						
+						<td class="text-center">
+							<a class="btn-sm btn-danger" role="button" title="update" href="<?php echo base_url().'company/delete/'.$item->ID;?>">
+								trash
+							</a>
+						</td>						
 					</tr>
 					<?php endforeach;?>	
 					</tbody>

@@ -21,6 +21,7 @@ class Company extends CI_Controller {
 		$this->db->select('COMPANY_NAME');
 		$this->db->select('COMPANY_STATUS');
 		$this->db->from('COMPANY');	
+		$this->db->where('COMPANY_STATUS!=', '9');	
 		$this->db->order_by('COMPANY_NAME', 'ASC');		
 		$query = $this->db->get(); 
 		$this->data['record'] = $query->result();
@@ -44,6 +45,7 @@ class Company extends CI_Controller {
 			$this->db->select('ID');
 			$this->db->select('COMPANY_NAME');
 			$this->db->from('COMPANY');
+			$this->db->where('COMPANY_STATUS!=', '9');
 			$this->db->where('COMPANY_NAME', $_POST['name']);		
 			$query = $this->db->get();
 			if($query->num_rows()==1){
@@ -95,6 +97,7 @@ class Company extends CI_Controller {
 					$this->db->select('ID');
 					$this->db->select('COMPANY_NAME');
 					$this->db->from('COMPANY');
+					$this->db->where('COMPANY_STATUS!=', '9');
 					$this->db->where('COMPANY_NAME', $_POST['name']);		
 					$query = $this->db->get();
 					if($query->num_rows()==1){
@@ -161,6 +164,30 @@ class Company extends CI_Controller {
 			}
 		}		
 	}	
+	
+	public function delete($id=null){
+		if($id === null){
+			redirect('authentication/no_permission');
+		}else{
+			//load data
+			$this->db->select('ID');	
+			$this->db->select('COMPANY_STATUS');	
+			$this->db->from('COMPANY');
+			$this->db->where('ID', $id);	
+			$query = $this->db->get();	
+			$result = $query->result();
+			
+			if($result !== null){
+				//Update Status di database
+				$this->db->set('COMPANY_STATUS', '9');
+				$this->db->where('ID', $id);
+				$this->db->update('COMPANY');	
+				redirect('company');
+			}else{
+				redirect('company');
+			}
+		}		
+	}		
 }
 
 
