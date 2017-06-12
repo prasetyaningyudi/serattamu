@@ -46,6 +46,11 @@ class Packages extends CI_Controller {
 		$this->load->view('section_content_title');
 		$this->load->view('packages_index');
 		$this->load->view('section_footer');
+		if(isset($this->session->userdata['is_logged_in'])){
+						
+		}else{
+			header( "refresh:5;url=".base_url()."home" );
+		}
 	}
 	
 	public function create(){

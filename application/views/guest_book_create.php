@@ -93,16 +93,20 @@ $( function() {
 
 <script>
 $( function() {
+	$(".choose-2").hide();
 	$('#need').change(function() {
 		if ($(this).val() === 'Meet Someone') {
 			$(".choose-1").show();
-			$(".choose-2").hide();
+			$(".choose-2").hide();	
+			$('#who').prop('required', true);				
 		}else if ($(this).val() === 'Meeting') {
 			$(".choose-1").hide();
 			$(".choose-2").show();
+			$('#who').prop('required', false);				
 		}else{
 			$(".choose-1").hide();
-			$(".choose-2").hide();			
+			$(".choose-2").hide();	
+			$('#who').prop('required', false);			
 		}
 	});
 });
@@ -141,7 +145,7 @@ $( function() {
 } );	
 </script>
 			  <div class="panel-body">
-					<form action="" id="inputform" method="get" class="form-horizontal">
+					<form action="" id="inputform" method="post" class="form-horizontal">
 					  <fieldset>
 						<div class="form-group">	
 						<label for="name" class="col-sm-2">Guest Name:<br></label>
@@ -152,7 +156,7 @@ $( function() {
 						<div class="form-group">	
 						<label for="email" class="col-sm-2">Guest Email:<br></label>
 						<div class="col-sm-10">		
-						<input class="form-control" id="email" type="text" name="email" value="" placeholder="Guest Email">
+						<input class="form-control" id="email" type="email" name="email" value="" placeholder="Guest Email">
 						</div>
 						</div>	
 						<div class="form-group">	
@@ -182,12 +186,23 @@ $( function() {
 						<div class="col-sm-10">		
 						<input class="form-control" id="who" type="text" name="who" value="" placeholder="Meet Who" required>
 						</div>
-						</div>							
+						</div>	
+						<div class="form-group choose-2">	
+						<label for="meeting" class="col-sm-2">Today Meeting:<br></label>
+						<div class="col-sm-10">	
+						<select class="form-control" id="meeting" name="meeting" form="inputform">
+							<?php foreach ($record5 as $val):?>
+							<option value="<?php echo $val->ID;?>"><?php echo $val->ROOM_NAME.' | '.$val->AGENDA;?></option>	
+							<?php endforeach;?>
+						</select>  
+						</div>
+						</div>	
+						
 						<?php
 							if(isset($this->session->userdata['is_logged_in'])) {
 								$user_id = $this->session->userdata['ID'];
 							}else{
-								$user_id = 0;
+								$user_id = '';
 							}
 						?>					
 						<input type="hidden" id="user" name="user" value="<?php echo $user_id; ?>">	

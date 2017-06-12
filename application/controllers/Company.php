@@ -17,11 +17,14 @@ class Company extends CI_Controller {
 
 	public function index(){
 		//load list
-		$this->db->select('ID');
+		$tables = array('COMPANY', 'REF_GENERAL');			
+		$this->db->select('COMPANY.ID');
 		$this->db->select('COMPANY_NAME');
+		$this->db->select('REF_GENERAL.REF_NAME');
 		$this->db->select('COMPANY_STATUS');
-		$this->db->from('COMPANY');	
+		$this->db->from($tables);	
 		$this->db->where('COMPANY_STATUS!=', '9');	
+		$this->db->where('REF_GENERAL_ID=REF_GENERAL.ID');	
 		$this->db->order_by('COMPANY_NAME', 'ASC');		
 		$query = $this->db->get(); 
 		$this->data['record'] = $query->result();
@@ -56,12 +59,25 @@ class Company extends CI_Controller {
 				//insert ke database
 				$this->data['saveddata'] = array(
 					'COMPANY_NAME' => $_POST['name'],
-					'USER_ID' => $_POST['user']
+					'USER_ID' => $_POST['user'],
+					'REF_GENERAL_ID' => $_POST['type']
 				);			
 				$this->db->insert('COMPANY', $this->data['saveddata']);
 				redirect('company');				
 			}	
 		}
+		
+		$tables = array('REF_TYPE', 'REF_GENERAL');		
+		$this->db->select('REF_GENERAL.ID');
+		$this->db->select('REF_GENERAL.REF_NAME');
+		$this->db->from($tables);	
+		$this->db->where('REF_TYPE_STATUS', '1');		
+		$this->db->where('REF_STATUS', '1');		
+		$this->db->where('REF_TYPE.ID=REF_GENERAL.REF_TYPE_ID');
+		$this->db->where('REF_TYPE_NAME', 'COMPANY_TYPE');
+		$this->db->order_by('REF_GENERAL.REF_NAME', 'ASC');			
+		$query = $this->db->get(); 
+		$this->data['record1'] = $query->result();			
 		
 		$this->data['subtitle'] = 'Add';			
 		$this->data['data_table'] = 'no';	
@@ -86,11 +102,13 @@ class Company extends CI_Controller {
 			$this->db->select('ID');
 			$this->db->select('COMPANY_NAME');
 			$this->db->select('COMPANY_STATUS');
+			$this->db->select('REF_GENERAL_ID');
 			$this->db->from('COMPANY');	
 			$this->db->WHERE('ID', $id);			
 			$this->db->order_by('COMPANY_NAME', 'ASC');		
 			$query = $this->db->get(); 
 			$this->data['record'] = $query->result();
+			
 			
 			if($query->result() !== null){
 				if(isset($_POST['submit'])){
@@ -98,6 +116,7 @@ class Company extends CI_Controller {
 					$this->db->select('COMPANY_NAME');
 					$this->db->from('COMPANY');
 					$this->db->where('COMPANY_STATUS!=', '9');
+					$this->db->where('ID!=', $id);
 					$this->db->where('COMPANY_NAME', $_POST['name']);		
 					$query = $this->db->get();
 					if($query->num_rows()==1){
@@ -109,12 +128,26 @@ class Company extends CI_Controller {
 						$this->data['saveddata'] = array(
 							'COMPANY_NAME' => $_POST['name'],
 							'USER_ID' => $_POST['user'],
+							'REF_GENERAL_ID' => $_POST['type']							
 						);								
 						$this->db->where('ID', $id);
 						$this->db->update('COMPANY', $this->data['saveddata']);
 						redirect('company');				
 					}	
-				}				
+				}	
+
+				$tables = array('REF_TYPE', 'REF_GENERAL');		
+				$this->db->select('REF_GENERAL.ID');
+				$this->db->select('REF_GENERAL.REF_NAME');
+				$this->db->from($tables);	
+				$this->db->where('REF_TYPE_STATUS', '1');		
+				$this->db->where('REF_STATUS', '1');		
+				$this->db->where('REF_TYPE.ID=REF_GENERAL.REF_TYPE_ID');
+				$this->db->where('REF_TYPE_NAME', 'COMPANY_TYPE');
+				$this->db->order_by('REF_GENERAL.REF_NAME', 'ASC');			
+				$query = $this->db->get(); 
+				$this->data['record1'] = $query->result();	
+				
 				$this->data['subtitle'] = 'Update';			
 				$this->data['data_table'] = 'no';	
 				$this->data['role_access'] = array('1','3');			

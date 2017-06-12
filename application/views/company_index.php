@@ -12,6 +12,7 @@ $(document).ready(function() {
 					<tr>
 						<th class="text-center">No</th>
 						<th>Company Name</th>
+						<th>Company Type</th>
 						<th>Status</th>
 						<th class="text-center">Update Status</th>
 						<th class="text-center">Update</th>
@@ -23,6 +24,7 @@ $(document).ready(function() {
 					<tr>		
 						<td class="text-center"><?php echo $i++; ?></td>
 						<td><?php echo $item->COMPANY_NAME;?></td>
+						<td><?php echo $item->REF_NAME;?></td>
 						<td>
 							<?php 
 								if($item->COMPANY_STATUS == '1'){echo 'Active';}else{echo 'Inactive';}

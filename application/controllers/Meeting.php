@@ -237,13 +237,13 @@ class Meeting extends CI_Controller {
 					//same date
 					$new_date = date("Y-m-d H:i:s", strtotime($_POST['date'] . ' ' . $_POST['time'] . ':00:00'));
 					$new_hour = date("G", strtotime($new_date));
-					$new_duration = date("G", strtotime($new_date)) + $_POST['duration'];						
+					$new_duration = date("G", strtotime($new_date)) + ($_POST['duration'] -1);						
 					$new_range = range($new_hour, $new_duration);	
 					$error = false;
 					foreach($this->data['record1'] as $item){
 						$date_time = $item->MEETING_TIME;
 						$hour = date("G", strtotime($item->MEETING_TIME));
-						$duration = date("G", strtotime($item->MEETING_TIME)) + $item->DURATION;
+						$duration = date("G", strtotime($item->MEETING_TIME)) + ($item->DURATION-1);
 						$range = range($hour, $duration);
 						foreach($new_range as $item){
 							foreach($range as $value){

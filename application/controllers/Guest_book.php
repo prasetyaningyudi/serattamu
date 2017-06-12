@@ -15,22 +15,21 @@ class Guest_book extends CI_Controller {
 		$this->data['title'] = 'Guest Book';		
 	}
 
-	public function index($id=null){
-		$tables = array('PACKAGES', 'COMPANY', 'EMPLOYEES');		
-		$this->db->select('PACKAGES.ID');
-		$this->db->select('PACKAGES.PACKAGE_NAME');
-		$this->db->select('COMPANY.COMPANY_NAME');
-		$this->db->select('EMPLOYEES.EMPLOYEE_NAME');
-		$this->db->select('PACKAGES.PACKAGE_STATUS');
-		$this->db->select('PACKAGES.CREATE_DATE');
-		$this->db->from($tables);	
-		$this->db->where('PACKAGES.PACKAGE_STATUS !=', '9');			
-		$this->db->where('PACKAGES.COMPANY_ID=COMPANY.ID');
-		$this->db->where('PACKAGES.EMPLOYEES_ID=EMPLOYEES.ID');
+	public function index($id=null){	
+		$this->db->select('GUEST_BOOK.ID');
+		$this->db->select('REF_NAME');
+		$this->db->select('GUEST_NAME');
+		$this->db->select('GUEST_BOOK_STATUS');
+		$this->db->from('GUEST_BOOK');	
+
 		if($id !== null){
-		$this->db->where('PACKAGES.ID', $id);			
+			$this->db->where('GUEST_BOOK.ID', $id);			
 		}
-		$this->db->order_by('PACKAGES.CREATE_DATE', 'ASC');			
+		$this->db->join('REF_GENERAL', 'REF_GENERAL.ID = GUEST_BOOK.REF_GENERAL_ID', 'left');			
+		$this->db->join('GUEST', 'GUEST.ID = GUEST_BOOK.GUEST_ID', 'left');			
+		$this->db->where('GUEST_BOOK_STATUS !=', '9');
+		$this->db->order_by('GUEST_BOOK.CREATE_DATE', 'ASC');		
+		
 		$query = $this->db->get(); 
 		$this->data['record'] = $query->result();	
 		
@@ -44,38 +43,227 @@ class Guest_book extends CI_Controller {
 		$this->load->view('section_sidebar');
 		$this->load->view('section_breadcurm');
 		$this->load->view('section_content_title');
-		$this->load->view('packages_index');
+		$this->load->view('guest_book_index');
 		$this->load->view('section_footer');
 	}
 	
 	public function create(){
 		if(isset($_POST['submit'])){
-			$this->db->select('ID');
-			$this->db->select('EMPLOYEE_NAME');
-			$this->db->from('EMPLOYEES');		
-			$this->db->where('EMPLOYEE_STATUS', '1');		
-			$this->db->where('EMPLOYEE_NAME', $_POST['for']);	
-			$this->db->limit(1);			
-			$query = $this->db->get(); 
-			$this->data['record2'] = $query->result();	
-			if($query->num_rows()!=1){
+			if($_POST['email'] == '' and $_POST['phone'] == ''){
 				$this->data['warning'] = array(
-					'text' => 'Ops, Destination package for not valid, Try a new one.',
-				);
+					'text' => 'Ops, Please fill one of these information, Email or Phone',
+				);				
 			}else{
-				foreach($this->data['record2'] as $item){
-					$employee_id = $item->ID;
+				$this->db->select('ID');
+				$this->db->select('COMPANY_NAME');
+				$this->db->from('COMPANY');		
+				$this->db->where('COMPANY_STATUS', '1');		
+				if($_POST['cid'] == ''){
+					$this->db->where('COMPANY_NAME', $_POST['company']);	
+				}else{
+					$this->db->where('ID', $_POST['cid']);	
 				}				
-				//insert ke database
-				$this->data['saveddata'] = array(
-					'PACKAGE_NAME' => 'Package from '.substr($_POST['from'],1).' to '.$_POST['for'],
-					'EMPLOYEES_ID' => $employee_id,
-					'COMPANY_ID' => substr($_POST['from'],0,1),
-					'USER_ID' => $_POST['user']
-				);			
-				$this->db->insert('PACKAGES', $this->data['saveddata']);
-				redirect('packages/index/'.$this->db->insert_id());					
-			}						
+				$this->db->limit(1);				
+				$query = $this->db->get(); 
+				$this->data['record'] = $query->result();					
+				if($query->num_rows()!=1){
+					//insert ke database
+					if($_POST['user'] == ''){
+						$this->data['saveddata'] = array(
+							'COMPANY_NAME' => $_POST['company'],
+							'REF_GENERAL_ID' => 2,
+							'USER_ID' => 1,							
+						);								
+					}else{
+						$this->data['saveddata'] = array(
+							'COMPANY_NAME' => $_POST['company'],
+							'REF_GENERAL_ID' => 2,
+							'USER_ID' => $_POST['user']
+						);								
+					}
+					$this->db->insert('COMPANY', $this->data['saveddata']);	
+					$cid = $this->db->insert_id();
+				}else{		
+					foreach($this->data['record'] as $item){
+						$cid = $item->ID;
+					}
+				}
+				
+				//checking guest
+				$this->db->select('ID');
+				$this->db->select('GUEST_NAME');
+				$this->db->from('GUEST');		
+				$this->db->where('GUEST_STATUS', '1');		
+				$this->db->where('COMPANY_ID', $cid);		
+				if($_POST['id'] == ''){
+					$this->db->where('GUEST_NAME', $_POST['name']);	
+				}else{
+					$this->db->where('ID', $_POST['id']);	
+				}
+/* 				if($_POST['email'] != ''){
+					$this->db->where('GUEST_EMAIL', $_POST['email']);
+				}
+				if($_POST['phone'] != ''){
+					$this->db->where('GUEST_PHONE', $_POST['phone']);
+				}	 */			
+				$this->db->limit(1);				
+				$query = $this->db->get(); 
+				$this->data['record1'] = $query->result();	
+				if($_POST['user'] == ''){
+					$user = null;
+				}else{
+					$user = $_POST['user'];
+				}				
+				if($query->num_rows()!=1){
+					//insert ke database
+					$this->data['saveddata'] = array(
+						'GUEST_NAME' => $_POST['name'],
+						'GUEST_PHONE' => $_POST['phone'],
+						'GUEST_EMAIL' => $_POST['email'],
+						'USER_ID' => $user,
+						'COMPANY_ID' => $cid
+					);			
+					$this->db->insert('GUEST', $this->data['saveddata']);
+					$gid = $this->db->insert_id();
+				}else{
+					foreach($this->data['record1'] as $val){
+						$gid = $val->ID;
+					}					
+					$this->data['saveddata'] = array(
+						'GUEST_NAME' => $_POST['name'],
+						'GUEST_PHONE' => $_POST['phone'],
+						'GUEST_EMAIL' => $_POST['email'],
+						'USER_ID' => $user,
+						'COMPANY_ID' => $cid
+					);	
+					$this->db->where('ID', $gid);
+					$this->db->update('GUEST', $this->data['saveddata']);				
+				}
+				
+				$tables = array('REF_GENERAL', 'REF_TYPE');					
+				$this->db->select('REF_GENERAL.ID');
+				$this->db->select('REF_NAME');
+				$this->db->select('REF_TYPE_NAME');
+				$this->db->from($tables);
+				$this->db->order_by('REF_NAME', 'ASC');		
+				$this->db->where('REF_GENERAL.REF_TYPE_ID=REF_TYPE.ID');		
+				$this->db->where('REF_TYPE_NAME', 'NEEDS_TYPE');			
+				$this->db->where('REF_NAME', $_POST['need']);			
+				$query = $this->db->get(); 
+				$this->data['record10'] = $query->result();	
+				foreach($this->data['record10'] as $item){
+					$rid = $item->ID;
+				}
+				
+				//execute guestbook
+				if($_POST['need'] == 'Meet Someone'){
+					$valid =false;					
+					$eid= '';
+					$did= '';
+					if($_POST['wid'] == ''){
+						$this->db->select('ID');
+						$this->db->select('EMPLOYEE_NAME');
+						$this->db->from('EMPLOYEES');		
+						$this->db->where('EMPLOYEE_STATUS', '1');								
+						$this->db->where('EMPLOYEE_NAME', $_POST['who']);
+						$this->db->limit(1);			
+						$query = $this->db->get(); 
+						$this->data['record2'] = $query->result();
+						if($query->num_rows()==1){
+							$valid = true;
+							foreach($this->data['record2'] as $item){
+								$eid = $item->ID;
+							}
+						}	
+						$this->db->select('ID');
+						$this->db->select('DIVISION_NAME');
+						$this->db->from('DIVISION');		
+						$this->db->where('DIVISION_STATUS', '1');							
+						$this->db->where('EMPLOYEE_NAME', $_POST['who']);
+						$this->db->limit(1);			
+						$query = $this->db->get(); 
+						$this->data['record2'] = $query->result();	
+						if($query->num_rows()==1){
+							$valid = true;
+							foreach($this->data['record2'] as $item){
+								$did = $item->ID;
+							}						
+						}							
+					}else {
+						if(substr($_POST['wid'], 0,1) == 'E'){
+							$this->db->select('ID');
+							$this->db->select('EMPLOYEE_NAME');
+							$this->db->from('EMPLOYEES');		
+							$this->db->where('EMPLOYEE_STATUS', '1');								
+							$this->db->where('ID', substr($_POST['wid'], 1));
+							$this->db->limit(1);			
+							$query = $this->db->get(); 
+							$this->data['record2'] = $query->result();
+							if($query->num_rows()==1){
+								$valid = true;
+								foreach($this->data['record2'] as $item){
+									$eid = $item->ID;
+								}
+							}							
+						}else if(substr($_POST['wid'], 0,1) == 'D'){
+							$this->db->select('ID');
+							$this->db->select('DIVISION_NAME');
+							$this->db->from('DIVISION');		
+							$this->db->where('DIVISION_STATUS', '1');							
+							$this->db->where('ID', substr($_POST['wid'], 1));
+							$this->db->limit(1);			
+							$query = $this->db->get(); 
+							$this->data['record2'] = $query->result();	
+							if($query->num_rows()==1){
+								$valid = true;
+								foreach($this->data['record2'] as $item){
+									$did = $item->ID;
+								}						
+							}							
+						}						
+					}
+
+					if($valid == false){
+						$this->data['warning'] = array(
+							'text' => 'Ops, Employee or Division is not valid, Try a new one.',
+						);						
+					}else{
+						if($eid != ''){
+							$this->data['saveddata'] = array(
+									'GUEST_ID' => $gid,
+									'EMPLOYEES_ID' => $eid,
+									'REF_GENERAL_ID' => $rid,
+									'USER_ID' => $user,
+								);								
+							$this->db->insert('GUEST_BOOK', $this->data['saveddata']);								
+						}else{
+							$this->data['saveddata'] = array(
+									'GUEST_ID' => $gid,
+									'DIVISION_ID' => $did,
+									'REF_GENERAL_ID' => $rid,
+									'USER_ID' => $user,
+								);								
+							$this->db->insert('GUEST_BOOK', $this->data['saveddata']);							
+						}
+					}				
+				}else if($_POST['need'] == 'Meeting'){
+					$this->data['saveddata'] = array(
+							'GUEST_ID' => $gid,
+							'MEETING_ID' => $_POST['meeting'],
+							'REF_GENERAL_ID' => $rid,
+							'USER_ID' => $user,
+						);								
+					$this->db->insert('GUEST_BOOK', $this->data['saveddata']);						
+				}else{
+					$this->data['saveddata'] = array(
+							'GUEST_ID' => $gid,
+							'REF_GENERAL_ID' => $rid,
+							'USER_ID' => $user,
+						);								
+					$this->db->insert('GUEST_BOOK', $this->data['saveddata']);						
+				}
+				redirect('home');
+			}				
 		}
 		//guest list
 		$tables = array('COMPANY', 'GUEST');					
@@ -134,7 +322,21 @@ class Guest_book extends CI_Controller {
 		$this->db->order_by('DIVISION_NAME', 'ASC');		
 		$this->db->where('DIVISION_STATUS', '1');		
 		$query = $this->db->get(); 
-		$this->data['record4'] = $query->result();			
+		$this->data['record4'] = $query->result();		
+
+		$cur_date = date('Y-m-d');
+		
+		$tables = array('MEETING', 'MEETING_ROOM');	
+		$this->db->select('MEETING.ID');
+		$this->db->select('AGENDA');
+		$this->db->select('ROOM_NAME');
+		$this->db->from($tables);
+		$this->db->order_by('AGENDA', 'ASC');		
+		$this->db->where('MEETING_STATUS', '1');		
+		$this->db->where('MEETING_ROOM_ID=MEETING_ROOM.ID');		
+		$this->db->like('MEETING_TIME', $cur_date, 'after'); 		
+		$query = $this->db->get(); 
+		$this->data['record5'] = $query->result();			
 		
 		$this->data['subtitle'] = 'Sign In';			
 		$this->data['data_table'] = 'no';	
@@ -154,123 +356,38 @@ class Guest_book extends CI_Controller {
 		if($id == null){
 			redirect('authentication/no_permission');
 		}else{
-			//load
-			$tables = array('PACKAGES', 'COMPANY', 'EMPLOYEES');		
-			$this->db->select('PACKAGES.ID');
-			$this->db->select('PACKAGES.PACKAGE_NAME');
-			$this->db->select('COMPANY.COMPANY_NAME');
-			$this->db->select('EMPLOYEES.EMPLOYEE_NAME');
-			$this->db->select('PACKAGES.PACKAGE_STATUS');
-			$this->db->select('PACKAGES.EMPLOYEES_ID');
-			$this->db->select('PACKAGES.COMPANY_ID');
-			$this->db->select('PACKAGES.CREATE_DATE');
-			$this->db->from($tables);	
-			$this->db->where('PACKAGES.PACKAGE_STATUS !=', '9');			
-			$this->db->where('PACKAGES.COMPANY_ID=COMPANY.ID');
-			$this->db->where('PACKAGES.EMPLOYEES_ID=EMPLOYEES.ID');
-			$this->db->where('PACKAGES.ID', $id);			
-			$this->db->order_by('PACKAGES.CREATE_DATE', 'ASC');			
-			$query = $this->db->get(); 
-			$this->data['record'] = $query->result();	
 			
 			if($query->result() !== null){
 				if(isset($_POST['submit'])){
-					$this->db->select('ID');
-					$this->db->select('EMPLOYEE_NAME');
-					$this->db->from('EMPLOYEES');		
-					$this->db->where('EMPLOYEE_STATUS', '1');		
-					$this->db->where('EMPLOYEE_NAME', $_POST['for']);	
-					$this->db->limit(1);			
-					$query = $this->db->get(); 
-					$this->data['record2'] = $query->result();	
-					if($query->num_rows()!=1){
-						$this->data['warning'] = array(
-							'text' => 'Ops, Destination package for not valid, Try a new one.',
-						);
-					}else{
-						foreach($this->data['record2'] as $item){
-							$employee_id = $item->ID;
-						}				
-						//insert ke database
-						$this->data['saveddata'] = array(
-							'PACKAGE_NAME' => 'Package from '.substr($_POST['from'],1).' to '.$_POST['for'],
-							'EMPLOYEES_ID' => $employee_id,
-							'COMPANY_ID' => substr($_POST['from'],0,1),
-							'USER_ID' => $_POST['user']
-						);	
-						$this->db->where('ID', $id);
-						$this->db->update('PACKAGES', $this->data['saveddata']);
-						redirect('packages');					
-					}	
-				}
-				
-				$this->db->select('ID');
-				$this->db->select('EMPLOYEE_NAME');
-				$this->db->from('EMPLOYEES');
-				$this->db->order_by('EMPLOYEE_NAME', 'ASC');		
-				$this->db->where('EMPLOYEE_STATUS', '1');		
-				$query = $this->db->get(); 
-				$this->data['record1'] = $query->result();	
 
-				$tables = array('COMPANY', 'REF_GENERAL');		
-				$this->db->select('COMPANY.ID');
-				$this->db->select('COMPANY.COMPANY_NAME');
-				$this->db->select('REF_GENERAL.REF_NAME');
-				$this->db->from($tables);	
-				$this->db->where('COMPANY.COMPANY_STATUS', '1');		
-				$this->db->where('REF_GENERAL.REF_STATUS', '1');		
-				$this->db->where('COMPANY.REF_GENERAL_ID=REF_GENERAL.ID');
-				$this->db->where('REF_GENERAL.REF_NAME', 'Expedition');
-				$this->db->order_by('COMPANY.COMPANY_NAME', 'ASC');			
-				$query = $this->db->get(); 
-				$this->data['record3'] = $query->result();				
-				
-				$this->data['subtitle'] = 'Update';			
-				$this->data['data_table'] = 'no';	
-				$this->data['role_access'] = array('1','3');			
-				
-				//view
-				$this->load->view('section_header', $this->data);
-				$this->load->view('section_navbar');
-				$this->load->view('section_sidebar');
-				$this->load->view('section_breadcurm');
-				$this->load->view('section_content_title');
-				$this->load->view('packages_update');
-				$this->load->view('section_footer');
+				}
 			}else{
 				redirect('packages');
 			}						
 		}
 	}	
 
-	public function update_status($id=null){
+	public function signout($id=null){
 		if($id === null){
 			redirect('authentication/no_permission');
 		}else{
 			//load data
 			$this->db->select('ID');	
-			$this->db->select('PACKAGE_STATUS');	
-			$this->db->from('PACKAGES');
+			$this->db->select('GUEST_BOOK_STATUS');	
+			$this->db->from('GUEST_BOOK');
 			$this->db->where('ID', $id);	
+			$this->db->where('GUEST_BOOK_STATUS', '1');	
 			$query = $this->db->get();	
 			$result = $query->result();
 			
 			if($result !== null){
-				foreach($result as $item){
-					$status = $item->PACKAGE_STATUS;
-				}
-				if($status == '1'){
-					$new_status = '0';
-				}else if($status == '0'){
-					$new_status = '1';
-				}
 				//Update Status di database
-				$this->db->set('PACKAGE_STATUS', $new_status);
+				$this->db->set('GUEST_BOOK_STATUS', '0');
 				$this->db->where('ID', $id);
-				$this->db->update('PACKAGES');	
-				redirect('packages');
+				$this->db->update('GUEST_BOOK');	
+				redirect('guest');
 			}else{
-				redirect('packages');
+				redirect('guest');
 			}
 		}		
 	}	
@@ -281,20 +398,20 @@ class Guest_book extends CI_Controller {
 		}else{
 			//load data
 			$this->db->select('ID');	
-			$this->db->select('PACKAGE_STATUS');	
-			$this->db->from('PACKAGES');
+			$this->db->select('GUEST_BOOK_STATUS');	
+			$this->db->from('GUEST_BOOK');
 			$this->db->where('ID', $id);	
 			$query = $this->db->get();	
 			$result = $query->result();
 			
 			if($result !== null){
 				//Update Status di database
-				$this->db->set('PACKAGE_STATUS', '9');
+				$this->db->set('GUEST_BOOK_STATUS', '9');
 				$this->db->where('ID', $id);
-				$this->db->update('PACKAGES');	
-				redirect('packages');
+				$this->db->update('GUEST_BOOK');	
+				redirect('guest');
 			}else{
-				redirect('packages');
+				redirect('guest');
 			}
 		}		
 	}	
