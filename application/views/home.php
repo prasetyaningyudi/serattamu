@@ -1,4 +1,5 @@
 			  <div class="panel-body">
+			  
 				  <?php if(isset($this->session->userdata['is_logged_in'])): ?>
 					<h2>Hello, <?php echo $this->session->userdata['USER_ALIAS']; ?></h2>
 						<?php if($valid === TRUE): ?>
@@ -25,8 +26,10 @@
 							<?php endif; ?>										
 						<?php endif; ?>										
 				  <?php else: ?>
+				  <div class="collapse navbar-collapse">
 					<h2>Hello, Guest</h2>
 					<h4>How are you today? Feels good right.<br>If you want to meet someone or attending a meeting (SIGN IN), , Delivery Package, or another needs, <br>Just click the button below to start.</h4>
+					</div>
 					<div class="row">
 						<div class="col-sm-4">
 							<a class="btn btn-info btn-lg btn-square" href="<?php echo base_url().'guest_book/create'; ?>" role="button">Sign In</a>	
