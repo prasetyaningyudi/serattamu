@@ -20,6 +20,7 @@ class Guest_book extends CI_Controller {
 		$this->db->select('REF_NAME');
 		$this->db->select('GUEST_NAME');
 		$this->db->select('GUEST_BOOK_STATUS');
+		$this->db->select('GUEST_BOOK.CREATE_DATE');
 		$this->db->from('GUEST_BOOK');	
 
 		if($id !== null){
@@ -28,7 +29,7 @@ class Guest_book extends CI_Controller {
 		$this->db->join('REF_GENERAL', 'REF_GENERAL.ID = GUEST_BOOK.REF_GENERAL_ID', 'left');			
 		$this->db->join('GUEST', 'GUEST.ID = GUEST_BOOK.GUEST_ID', 'left');			
 		$this->db->where('GUEST_BOOK_STATUS !=', '9');
-		$this->db->order_by('GUEST_BOOK.CREATE_DATE', 'ASC');		
+		$this->db->order_by('GUEST_BOOK.CREATE_DATE', 'DESC');		
 		
 		$query = $this->db->get(); 
 		$this->data['record'] = $query->result();	
@@ -45,6 +46,11 @@ class Guest_book extends CI_Controller {
 		$this->load->view('section_content_title');
 		$this->load->view('guest_book_index');
 		$this->load->view('section_footer');
+		if(isset($this->session->userdata['is_logged_in'])){
+						
+		}else{
+			header( "refresh:5;url=".base_url()."home" );
+		}		
 	}
 	
 	public function create(){
@@ -243,7 +249,8 @@ class Guest_book extends CI_Controller {
 									'REF_GENERAL_ID' => $rid,
 									'USER_ID' => $user,
 								);								
-							$this->db->insert('GUEST_BOOK', $this->data['saveddata']);							
+							$this->db->insert('GUEST_BOOK', $this->data['saveddata']);	
+							redirect('guest_book/index/'.$this->db->insert_id());
 						}
 					}				
 				}else if($_POST['need'] == 'Meeting'){
@@ -253,16 +260,17 @@ class Guest_book extends CI_Controller {
 							'REF_GENERAL_ID' => $rid,
 							'USER_ID' => $user,
 						);								
-					$this->db->insert('GUEST_BOOK', $this->data['saveddata']);						
+					$this->db->insert('GUEST_BOOK', $this->data['saveddata']);	
+					redirect('guest_book/index/'.$this->db->insert_id());
 				}else{
 					$this->data['saveddata'] = array(
 							'GUEST_ID' => $gid,
 							'REF_GENERAL_ID' => $rid,
 							'USER_ID' => $user,
 						);								
-					$this->db->insert('GUEST_BOOK', $this->data['saveddata']);						
+					$this->db->insert('GUEST_BOOK', $this->data['saveddata']);	
+					redirect('guest_book/index/'.$this->db->insert_id());
 				}
-				redirect('home');
 			}				
 		}
 		//guest list
@@ -367,7 +375,7 @@ class Guest_book extends CI_Controller {
 		}
 	}	
 
-	public function signout($id=null){
+	public function sign_out($id=null){
 		if($id === null){
 			redirect('authentication/no_permission');
 		}else{
@@ -385,9 +393,9 @@ class Guest_book extends CI_Controller {
 				$this->db->set('GUEST_BOOK_STATUS', '0');
 				$this->db->where('ID', $id);
 				$this->db->update('GUEST_BOOK');	
-				redirect('guest');
+				redirect('guest_book');
 			}else{
-				redirect('guest');
+				redirect('guest_book');
 			}
 		}		
 	}	
@@ -409,12 +417,71 @@ class Guest_book extends CI_Controller {
 				$this->db->set('GUEST_BOOK_STATUS', '9');
 				$this->db->where('ID', $id);
 				$this->db->update('GUEST_BOOK');	
-				redirect('guest');
+				redirect('guest_book');
 			}else{
-				redirect('guest');
+				redirect('guest_book');
 			}
 		}		
-	}	
+	}
+
+	public function signout(){
+		$this->db->select('GUEST_BOOK.ID');
+		$this->db->select('REF_NAME');
+		$this->db->select('GUEST_NAME');
+		$this->db->select('COMPANY_NAME');
+		$this->db->select('GUEST_BOOK_STATUS');
+		$this->db->select('GUEST_BOOK.CREATE_DATE');
+		$this->db->from('GUEST_BOOK');	
+		$this->db->join('REF_GENERAL', 'REF_GENERAL.ID = GUEST_BOOK.REF_GENERAL_ID', 'left');			
+		$this->db->join('GUEST', 'GUEST.ID = GUEST_BOOK.GUEST_ID', 'left');	
+		$this->db->join('COMPANY', 'COMPANY.ID = GUEST.COMPANY_ID', 'left');
+		if(isset($_POST['submit'])){
+			if($_POST['id']==''){
+				$this->data['warning'] = array(
+					'text' => 'Ops, Guest Book name not valid, try another',
+				);
+				$this->db->where('1!=', '1');
+			}else{
+				$this->db->where('GUEST_BOOK.ID', $_POST['id']);			
+			}			
+		}else{
+			$this->db->where('1!=', '1');	
+		}
+		$this->db->where('GUEST_BOOK_STATUS', '1');		
+		$this->db->order_by('GUEST_BOOK.CREATE_DATE', 'DESC');		
+		
+		$query = $this->db->get();
+		$this->data['record'] = $query->result();	
+		
+		$this->db->select('GUEST_BOOK.ID');
+		$this->db->select('REF_NAME');
+		$this->db->select('GUEST_NAME');
+		$this->db->select('COMPANY_NAME');
+		$this->db->select('GUEST_BOOK_STATUS');
+		$this->db->select('GUEST_BOOK.CREATE_DATE');
+		$this->db->from('GUEST_BOOK');	
+		$this->db->join('REF_GENERAL', 'REF_GENERAL.ID = GUEST_BOOK.REF_GENERAL_ID', 'left');			
+		$this->db->join('GUEST', 'GUEST.ID = GUEST_BOOK.GUEST_ID', 'left');	
+		$this->db->join('COMPANY', 'COMPANY.ID = GUEST.COMPANY_ID', 'left');
+		$this->db->where('GUEST_BOOK_STATUS', '1');
+		$this->db->order_by('GUEST_BOOK.CREATE_DATE', 'DESC');		
+		
+		$query = $this->db->get();
+		$this->data['record1'] = $query->result();		
+		
+		$this->data['subtitle'] = 'View';			
+		$this->data['data_table'] = 'yes';
+		$this->data['role_access'] = array('1','3','4');			
+		
+		//view
+		$this->load->view('section_header', $this->data);
+		$this->load->view('section_navbar');
+		$this->load->view('section_sidebar');
+		$this->load->view('section_breadcurm');
+		$this->load->view('section_content_title');
+		$this->load->view('guest_book_signout');
+		$this->load->view('section_footer');		
+	}
 }
 
 

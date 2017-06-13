@@ -89,6 +89,7 @@ class Meeting extends CI_Controller {
 						$this->db->from('MEETING_PARTICIPANTS');	
 						$this->db->where('PARTICIPANT_STATUS !=', '9');		
 						$this->db->where('EMPLOYEES_ID', $employee_id);		
+						$this->db->where('MEETING_ID', $_POST['mid']);		
 						$query = $this->db->get(); 
 						$this->data['record1'] = $query->result();
 						if($query->num_rows()==1){

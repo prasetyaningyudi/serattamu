@@ -17,7 +17,6 @@ $(document).ready(function() {
 						<th>Sign In Time</th>
 						<?php if(isset($this->session->userdata['is_logged_in'])): ?>
 						<th class="text-center">Sign Out</th>
-						<th class="text-center">Update</th>
 						<th class="text-center">Trash</th>
 						<?php endif; ?>
 					</tr>
@@ -33,25 +32,20 @@ $(document).ready(function() {
 								if($item->GUEST_BOOK_STATUS == '1'){echo 'Sign In';}else{echo 'Sign Out';}
 							?>
 						</td>
+						<td><?php echo $item->CREATE_DATE;?></td>						
 						<?php if(isset($this->session->userdata['is_logged_in'])): ?>
+					
 						<td class="text-center">
-							<?php if($item->GUEST_BOOK_STATUS == '0'): ?>
-								<a class="btn-sm btn-warning" role="button" title="update status" href="<?php echo base_url().'packages/update_status/'.$item->ID;?>">
-									taken
+							<?php if($item->GUEST_BOOK_STATUS == '1'): ?>
+								<a class="btn-sm btn-warning" role="button" title="update status" href="<?php echo base_url().'guest_book/sign_out/'.$item->ID;?>">
+									Sign Out
 								</a>
 							<?php else: ?>
-								<a class="btn-sm btn-danger" role="button" title="update status" href="<?php echo base_url().'packages/update_status/'.$item->ID;?>">
-									nottaken
-								</a>
+
 							<?php endif; ?>
-						</td>						
+						</td>	
 						<td class="text-center">
-							<a class="btn-sm btn-primary" role="button" title="update" href="<?php echo base_url().'packages/update/'.$item->ID;?>">
-								update
-							</a>
-						</td>
-						<td class="text-center">
-							<a class="btn-sm btn-danger" role="button" title="update" href="<?php echo base_url().'packages/delete/'.$item->ID;?>">
+							<a class="btn-sm btn-danger" role="button" title="update" href="<?php echo base_url().'guest_book/delete/'.$item->ID;?>">
 								trash
 							</a>
 						</td>
