@@ -33,18 +33,18 @@ $(document).ready(function() {
 						<td><?php echo $item->CREATE_DATE;?></td>
 						<td>
 							<?php 
-								if($item->PACKAGE_STATUS == '1'){echo 'Already Taken';}else{echo 'Not Taken';}
+								if($item->PACKAGE_STATUS == '1'){echo 'Already Received';}else{echo 'Not Received';}
 							?>
 						</td>
 						<?php if(isset($this->session->userdata['is_logged_in'])): ?>
 						<td class="text-center">
 							<?php if($item->PACKAGE_STATUS == '0'): ?>
 								<a class="btn-sm btn-warning" role="button" title="update status" href="<?php echo base_url().'packages/update_status/'.$item->ID;?>">
-									taken
+									received
 								</a>
 							<?php else: ?>
 								<a class="btn-sm btn-danger" role="button" title="update status" href="<?php echo base_url().'packages/update_status/'.$item->ID;?>">
-									nottaken
+									not-received
 								</a>
 							<?php endif; ?>
 						</td>						
