@@ -26,14 +26,11 @@ a:hover{
 	margin-right: 0;
 }
 
-.my-title{
-	width: 600px;
-}
 .my-title span{
 	margin-right: 5px;
 }
 .my-breadcurm{
-	height: 40px;
+	height: 60px;
 	background: #3A3633;	
 	width: 100%;
 	border-bottom: solid 1px #1A1A1A;
@@ -62,7 +59,7 @@ a.btn-square{
 	color:#FFFFFF;
 }
 .my-profile{
-	height: 40px;
+	height: 60px;
 	width: 100%;
 	border-bottom: solid 1px #1A1A1A;
 	padding: 8px 12px;
@@ -133,14 +130,12 @@ a.btn-square{
 }
 #sidebar-up{
 	width: 250px;
-	height: 100%;
-	min-height: 750px;
+	height: 100vh;
 }
 #container #sidebar{
 	position:absolute;
 	background: #3A3633;
-	height: 100%;
-	min-height: 750px;	
+	height: 100vh;
 	color: #C0BBB7;
 	width: 250px;
 	-webkit-transition: all 0.5s ease;
@@ -155,8 +150,7 @@ a.btn-square{
 	position:relative;
 	background: #EDEDED;
 	margin-left: 250px;
-	height: 100%;
-	min-height: 1000px;
+	height: 100vh;
 	-webkit-transition: all 0.5s ease;
 	-moz-transition: all 0.5s ease;
 	-o-transition: all 0.5s ease;

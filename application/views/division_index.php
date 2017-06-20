@@ -1,11 +1,3 @@
-<script type='text/javascript'>
-$(document).ready(function() {
-    $('#my_table').DataTable({
-		"order": [],
-	});
-} );
-</script>
-
 			  <div class="panel-body">
 				<table id="my_table" class="table table-striped">
 					<thead>

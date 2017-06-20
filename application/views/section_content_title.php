@@ -15,3 +15,15 @@
 				?>				
 				</div>
 			  </div>
+<?php if(isset($data_table) and $data_table == 'yes'): ?>	
+<script type='text/javascript'>
+$(document).ready(function() {
+	$('#my_table').DataTable({
+        rowReorder: {
+            selector: 'td:nth-child(2)'
+        },
+        responsive: true
+	});
+} );
+</script>
+<?php endif; ?>	

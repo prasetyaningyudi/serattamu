@@ -23,11 +23,13 @@
 	<nav class="navbar navbar-default my-navbar">
 		<div class="container-fluid">
 			<div class="navbar-header">
+				<!--
 				<button type="button" class="navbar-toggle collapsed menu-toggle" data-toggle="collapse">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
-				 </button>		
+				 </button>	
+				-->
 				<a class="navbar-brand my-title" href="<?php echo base_url(); ?>">
 					<span class="glyphicon glyphicon-<?php echo $icon; ?>"></span> 
 					<b>

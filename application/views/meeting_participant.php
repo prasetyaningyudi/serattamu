@@ -1,10 +1,3 @@
-<script type='text/javascript'>
-$(document).ready(function() {
-    $('#my_table').DataTable({
-		"order": [],
-	});
-} );
-</script>
 <script>
 $( function() {
 	var pic= [

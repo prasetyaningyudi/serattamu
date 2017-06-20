@@ -31,7 +31,7 @@
 		//set cookies
 		$cookie= array(
 		  'name'   => 'toogled',
-		  'value'  => 'no',
+		  'value'  => 'yes',
 		   'expire' => '86500',
 		);
 		$this->input->set_cookie($cookie);				
@@ -64,11 +64,14 @@
 			echo ' | '.ucwords(strtolower($app_name)).' '.ucwords(strtolower($office_name));
 		?>	
 	</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/bootstrap-theme.min.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/jquery-ui.css">	
 	<?php if(isset($data_table) and $data_table == 'yes'): ?>	
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/datatables.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/rowReorder.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/responsive.dataTables.min.css">
 	<?php endif; ?>		
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/style.css">
 	<?php if(get_cookie("theme") !== null): ?>
@@ -85,6 +88,8 @@
 	<script type='text/javascript' src="<?php echo base_url(); ?>js/bootstrap.min.js"></script>	
 	<?php if(isset($data_table) and $data_table == 'yes'): ?>		
 	<script type='text/javascript' src="<?php echo base_url(); ?>js/datatables.min.js"></script>
+	<script type='text/javascript' src="<?php echo base_url(); ?>js/dataTables.rowReorder.min.js"></script>
+	<script type='text/javascript' src="<?php echo base_url(); ?>js/dataTables.responsive.min.js"></script>
 	<?php endif; ?>		
 </head>
 <body>
